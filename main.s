@@ -1,5 +1,5 @@
 /* ***************************************************************** 
-   mainMencion.s
+   main.s
    Programa principal que pide datos y muestra los resultados 
    
   Rodrigo Arriaza 15334
@@ -8,18 +8,33 @@
 .global main
 	.func main
 main:
+
 	ldr r0,=bienvenida
 	bl puts
+	
+ingresoDatos:
 	ldr r0, =pedirDato
 	bl puts
-	ldr r0, =formato
-	ldr r1, =semilla
+	ldr r0, =formatos
+	ldr r1, =seed
 	bl scanf
 	
+	@Programacion defensiva (codigo tomado de Blackboard)
+	@Revisa que el numero ingresado sea correcto
+	ldr r2, =seed
+	ldr r2,[r2]
+	cmp r2,#0
+	bne aleatorios
+	bl getchar	@sirve para que el programa lea <enter> para continuar
+	ldr r0,=error
+	bl puts
+	b ingresoDatos
+	
+aleatorios:
 	ldr r0, =vector
 	ldr r1, =size
 	ldr r1, [r1]
-	ldr r2, =semilla
+	ldr r2, =seed
 	ldr r2, [r2]
 	bl lfsr
 
@@ -35,7 +50,8 @@ salida:
 	.data
 vector:	 .space 128 * 32
 size:	 .word 128
-semilla:	.word 0
+seed:	.word 0
 pedirDato:	.asciz "Por favor ingrese un numero entero diferente de cero\n"
 bienvenida:	.asciz "Bienvenido al programa de numeros aleatorios.\n"
-formato:	.asciz "%d"
+error:			.asciz	"Error, numero no valido"
+formatos:	.asciz "%d"
