@@ -18,10 +18,9 @@
 	@r0 vector con numeros random
 	
 lfsr:
-		mov r3, r1 
-		ldr R6, =0x80200003	@este numero sale del polinomio 32, 22, 2, 1
+		mov r4, r1 @copio el valor original de la semilla en r4
 		mov r7, #0 @r7 es el contador
-		
+		ldr R6, =0x80200003	@este numero sale del polinomio 32, 22, 2, 1
 	elcicloide:
 			@se sigue el algoritmo de Galois tomado de Wikipedia
 			and r1, r2, #1 		@ R1=LSB
@@ -30,16 +29,16 @@ lfsr:
 			eorne r2, r2, R6 		@ xor de lfsr con el polinomio si LSB = 1
 			
 			@aqui se convierte de int a float
-			vmov s0, r2
-			vcvt.f32.s32 s0, s0 
+			vmov s1, r2
+			vcvt.f32.s32 s1, s1 
 			
 			@aqui se guarda el el vector que esta en r0
-			vstr s0, [r0]
+			vstr s1, [r0]
 			add r0, r0, #4
 			
 			@aumenta el contador y  compara si ya llego al tamano deseado
 			adds r7, r7, #1
-			cmp r3, r7
+			cmp r4, r7
 			bne elcicloide
 		@ Salir de la subrutina
 		mov pc, lr
