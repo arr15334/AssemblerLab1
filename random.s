@@ -25,8 +25,8 @@ lfsr:
 			@se sigue el algoritmo de Galois tomado de Wikipedia
 			and r1, r2, #1 		@ R1=LSB
 			lsr r2, r2, #1 			@ Shift register
-			cmp r1, #0 			
-			eorne r2, r2, R6 		@ xor de lfsr con el polinomio si LSB = 1
+			cmp r1, #1 			
+			eoreq r2, r2, R6 		@ xor de lfsr con el polinomio si LSB = 1
 			
 			@aqui se convierte de int a float
 			vmov s1, r2
